@@ -12,7 +12,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     ////linea de validacion de entrad al sistema
-    //localStorage.setItem('authToken', 'tu-token-jwt-aqui');
+    // localStorage.setItem('authToken', 'tu-token-jwt-aqui');
     localStorage.removeItem('authToken');
 
     const token = localStorage.getItem('authToken');
@@ -24,15 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // $("#main-wrapper").css("visibility","hidden");
         document.getElementById('main-wrapper').style.display = 'none'; // Si usabas flexbox
 
-        fetch(`./views/login.html`)
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('authentication-login-page').innerHTML = html;
-        })
-        .catch(error => {
-            console.error('Error al cargar la vista:', error);
-            document.getElementById('dynamicContent').innerHTML = '<h2>Error al cargar la página</h2>';
-        });
+        loadView('login');
     }
 
     // Manejadores para los enlaces del menú
@@ -45,15 +37,72 @@ document.addEventListener('DOMContentLoaded', function() {
     // });
 });
 
-function loadView(viewName) {
-    // console.log(viewName);
-    fetch(`./views/${viewName}.html`)
-        .then(response => response.text())
-        .then(html => {
+// function loadView(viewName) {
+//     // console.log(viewName);
+//     fetch(`./views/${viewName}.html`)
+//         .then(response => response.text())
+//         .then(html => {
+//             document.getElementById('dynamicContent').innerHTML = html;
+//         })
+//         .catch(error => {
+//             console.error('Error al cargar la vista:', error);
+//             document.getElementById('dynamicContent').innerHTML = '<h2>Error al cargar la página</h2>';
+//         });
+// }
+
+async function loadView(viewName) {
+    try {
+        // 1. Cargar HTML
+        const htmlResponse = await fetch(`./views/${viewName}/${viewName}.html`);
+        const html = await htmlResponse.text();
+
+        if(viewName === "login"){
+            document.getElementById('authentication-login-page').innerHTML = html;
+        }else{
             document.getElementById('dynamicContent').innerHTML = html;
-        })
-        .catch(error => {
-            console.error('Error al cargar la vista:', error);
-            document.getElementById('dynamicContent').innerHTML = '<h2>Error al cargar la página</h2>';
-        });
+        }
+
+        
+
+        // 2. Cargar CSS dinámicamente
+        loadCSS(viewName);
+
+        // 3. Cargar JS dinámicamente
+        loadJS(viewName);
+
+    } catch (error) {
+        console.error(`Error al cargar la vista ${viewName}:`, error);
+        document.getElementById('dynamicContent').innerHTML = `
+            <h2>Error al cargar la página</h2>
+            <p>${error.message}</p>
+        `;
+    }
+}
+
+// Función para cargar CSS
+function loadCSS(viewName) {
+    const linkId = `${viewName}-css`;
+    const oldLink = document.getElementById(linkId);
+    
+    if (oldLink) oldLink.remove();
+
+    const link = document.createElement('link');
+    link.id = linkId;
+    link.rel = 'stylesheet';
+    link.href = `./views/${viewName}/${viewName}.css`;
+    document.head.appendChild(link);
+}
+
+// Función para cargar JS
+function loadJS(viewName) {
+    const scriptId = `${viewName}-js`;
+    const oldScript = document.getElementById(scriptId);
+    
+    if (oldScript) oldScript.remove();
+
+    const script = document.createElement('script');
+    script.id = scriptId;
+    script.src = `./views/${viewName}/${viewName}.js`;
+    script.type = 'module'; // Opcional: si usas ES modules
+    document.body.appendChild(script);
 }
