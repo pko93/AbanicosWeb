@@ -1,3 +1,7 @@
+import { AuthService } from './auth.js';
+
+
+
 // // Guardar token al hacer login
 // localStorage.setItem('authToken', 'tu-token-jwt-aqui');
 // localStorage.setItem('userPermissions', JSON.stringify(['dashboard', 'admin']));
@@ -13,9 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     ////linea de validacion de entrad al sistema
     // localStorage.setItem('authToken', 'tu-token-jwt-aqui');
-    localStorage.removeItem('authToken');
+    // localStorage.removeItem('authToken');
+
+
 
     const token = localStorage.getItem('authToken');
+    updateMenu();
     
     if(hasInfo(token)){
         document.getElementById('main-wrapper').style.display = 'flex'; // Si usabas flexbox
@@ -36,19 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
     //     });
     // });
 });
-
-// function loadView(viewName) {
-//     // console.log(viewName);
-//     fetch(`./views/${viewName}.html`)
-//         .then(response => response.text())
-//         .then(html => {
-//             document.getElementById('dynamicContent').innerHTML = html;
-//         })
-//         .catch(error => {
-//             console.error('Error al cargar la vista:', error);
-//             document.getElementById('dynamicContent').innerHTML = '<h2>Error al cargar la página</h2>';
-//         });
-// }
 
 async function loadView(viewName) {
     try {
@@ -106,3 +100,30 @@ function loadJS(viewName) {
     script.type = 'module'; // Opcional: si usas ES modules
     document.body.appendChild(script);
 }
+
+function RedirecHome(){
+    loadView('home');
+}
+
+function updateMenu() {
+    const menuItems = {
+        "01": document.querySelector('[data-view="venta"]'),
+        "02": document.querySelector('[data-view="producto"]'),
+        "03": document.querySelector('[data-view="sucursal"]'),
+        "04": document.querySelector('[data-view="reporte"]'),
+        "05": document.querySelector('[data-view="usuario"]'),
+        "06": document.querySelector('[data-view="dinero"]'),
+        "07": document.querySelector('[data-view="ajustes"]'),
+    };
+
+    Object.entries(menuItems).forEach(([screen, element]) => {
+        if (element) {
+            element.style.display = AuthService.hasPermission(screen) ? 'block' : 'none';
+        }
+    });
+}
+
+document.getElementById('btnLogo1').addEventListener('click', RedirecHome);
+
+
+
