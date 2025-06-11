@@ -1,10 +1,14 @@
+// Importa la función desde main.js
+import { loadView, updateMenu,updateSucursalesDropdown } from '../../assets/js/main.js';
+
+
 async function handleLogin() {
     const User = document.getElementById('User').value;
     const pass = document.getElementById('pass').value;
 
     // Validación básica
     if (!User || !pass) {
-        alert('Email y contraseña son obligatorios');
+        alert('usuario y contraseña son obligatorios');
         return;
     }
 
@@ -25,7 +29,7 @@ async function handleLogin() {
 
         // const data = await response.json();
         
-        var pantallas = new Array()
+        var pantallas = new Array();
         pantallas.push("01");
         pantallas.push("02");
         pantallas.push("03");
@@ -33,18 +37,25 @@ async function handleLogin() {
         pantallas.push("05");
         pantallas.push("06");
         pantallas.push("07");
+        var sucursales = new Array();
+        sucursales.push({ClaveSucursal:'01',nombre:'mercado'});
+        sucursales.push({ClaveSucursal:'02',nombre:'mainero'});
         // // Guarda el token en localStorage (ejemplo)
         localStorage.setItem('authToken', "token provicional");
         localStorage.setItem('userPermissions', JSON.stringify(pantallas));
-        
-        loadView('home');
-        
-        // Redirige al dashboard
-        // window.location.href = './home/home.html';
+        localStorage.setItem('userSucursales', JSON.stringify(sucursales));
+        localStorage.setItem('ClaveTipo', "01");
 
+
+        // console.log("Ejecutando handleLogin");
+        updateSucursalesDropdown();
+        updateMenu();
+        // console.log("updateMenu llamado");
+        loadView('home');
+        // console.log("loadView llamado");
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById('error-message').textContent = error.message;
+        // document.getElementById('error-message').textContent = error.message;
     }
 }
 

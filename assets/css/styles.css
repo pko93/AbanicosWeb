@@ -54,3 +54,33 @@ body {
     background-color: #ecf0f1;
     min-height: 100vh;
 }
+
+.row {
+    padding-bottom: 7px;
+}
+
+/* Estilos para el select personalizado */
+.multi-select-container {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.multi-select-container .tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+/* Estilo para los tags */
+.multi-select-container .badge {
+  font-size: 0.85em;
+  padding: 0.35em 0.65em;
+}
+
+/* Ajuste para el placeholder */
+.multi-select-container .text-muted {
+  margin-right: auto;
+}

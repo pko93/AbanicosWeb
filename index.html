@@ -32,7 +32,7 @@
                 <span class="hide-menu">Home</span>
                 </li>
                 <li class="sidebar-item">
-                <a style="display: flex;" data-view="venta" class="sidebar-link justify-content-between"  
+                <a style="display: flex;" data-view="01" class="sidebar-link justify-content-between"  
                     href="#" aria-expanded="false">
                     <div class="d-flex align-items-center gap-3">
                     <span class="d-flex">
@@ -44,7 +44,7 @@
                 </a>
                 </li>
                 <li class="sidebar-item">
-                <a style="display: flex;" data-view="producto" class="sidebar-link justify-content-between"  
+                <a style="display: flex;" data-view="02" class="sidebar-link justify-content-between"  
                     href="#" aria-expanded="false">
                     <div class="d-flex align-items-center gap-3">
                     <span class="d-flex">
@@ -57,7 +57,7 @@
                 </li>
                 
                 <li class="sidebar-item">
-                <a style="display: flex;" data-view="sucursal" class="sidebar-link justify-content-between"  
+                <a style="display: flex;" data-view="03" class="sidebar-link justify-content-between"  
                     href="#" aria-expanded="false">
                     <div class="d-flex align-items-center gap-3">
                     <span class="d-flex">
@@ -69,7 +69,7 @@
                 </a>
                 </li>
                 <li class="sidebar-item">
-                <a style="display: flex;" data-view="dinero" class="sidebar-link justify-content-between"  
+                <a style="display: flex;" data-view="06" class="sidebar-link justify-content-between"  
                     href="#" aria-expanded="false">
                     <div class="d-flex align-items-center gap-3">
                     <span class="d-flex">
@@ -81,7 +81,7 @@
                 </a>
                 </li>
                 <li class="sidebar-item">
-                <a data-view="correo" class="sidebar-link justify-content-between"  
+                <a data-view="07" class="sidebar-link justify-content-between"  
                     href="#" aria-expanded="false">
                     <div class="d-flex align-items-center gap-3">
                     <span class="d-flex">
@@ -93,20 +93,20 @@
                 </a>
                 </li>
                 <li class="sidebar-item">
-                <a data-view="reporte" class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
+                <a data-view="04" class="sidebar-link" href="./ui-forms.html" aria-expanded="false">
                     <i class="ti ti-file-text"></i>
                     <span class="hide-menu">Reporte</span>
                 </a>
                 </li>
                 <li class="sidebar-item">
-                <a data-view="ajustes" class="sidebar-link justify-content-between"  
+                <a data-view="05" class="sidebar-link justify-content-between"  
                     href="#"
                     aria-expanded="false">
                     <div class="d-flex align-items-center gap-3">
                     <span class="d-flex">
-                        <i class="ti ti-settings"></i>
+                        <i class="ti ti-user"></i>
                     </span>
-                    <span class="hide-menu">Ajustes</span>
+                    <span class="hide-menu">Usuario</span>
                     </div>
                     
                 </a>
@@ -117,6 +117,7 @@
                     <span class="hide-menu">Dashboard</span>
                 </a>
                 </li>
+                
             </ul>
             </nav>
             <!-- End Sidebar navigation -->
@@ -136,8 +137,9 @@
                     </li>
                     <li class="nav-item dropdown">
                     <a class="nav-link " href="javascript:void(0)" id="drop1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="ti ti-bell"></i>
-                        <div class="notification bg-primary rounded-circle"></div>
+                        <!-- <i class="ti ti-bell"></i> -->
+                        <!-- <div class="notification bg-primary rounded-circle"></div> -->
+                         Sucursal:
                     </a>
                     <div class="dropdown-menu dropdown-menu-animate-up" aria-labelledby="drop1">
                         <div class="message-body">
@@ -173,7 +175,7 @@
                             <i class="ti ti-list-check fs-6"></i>
                             <p class="mb-0 fs-3">My Task</p>
                             </a>
-                            <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                            <a id="btnLogaut" href="" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
                         </div>
                         </div>
                     </li>
@@ -184,10 +186,16 @@
             <!--  Header End -->
             <div class="body-wrapper-inner">
                 <div class="container-fluid">
-                    <!-- Contenido Dinámico -->
-                    <main  id="dynamicContent">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Contenido Dinámico -->
+                            <main  id="dynamicContent">
+                                
+                            </main>
+                        </div>
                         
-                    </main>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -207,6 +215,8 @@
     <!-- <script src="./assets/js/dashboard.js"></script> -->
      <script  type="module"src="./assets/js/auth.js"></script>
     <script type="module" src="./assets/js/main.js"></script>
+    <script src="./assets/js/MultiSelect.js" ></script>
     <script src="./assets/js/utils.js"></script>
+    <script src="./assets/js/fegWidgets.js"></script>
 </body>
 </html>

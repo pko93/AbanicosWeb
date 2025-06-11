@@ -1,0 +1,51 @@
+<h1>Usuario</h1>
+<div class="row">
+    <div class="col-md-2">
+        <label for="txtUsuario">Usuario</label>
+        <input type="text" class="form-control " id="txtUsuario" placeholder="Nombre de usuario">
+    </div>
+    <div class="col-md-6">
+        <label for="txtNombreCompleto">Nombre completo</label>
+        <input type="text" class="form-control" id="txtNombreCompleto" placeholder="Nombre completo">
+    </div>
+    <div class="col-md-1">
+        <label for="chkPass">Actualiza contraseña</label>
+        <input type="checkbox" class="form-check-input" id="chkPass">
+    </div>
+    <div class="col-md-3">
+        <label for="txtPass">Contraseña</label>
+        <input type="password" class="form-control" placeholder="Contraseña" id="txtPass">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <label for="cboTipoUsuario">Tipo usuario</label>
+        <select id="cboTipoUsuario" class="form-select"></select>
+    </div>
+    <div class="col-md-4">
+        <label for="cboPantallas">Pantallas</label>
+        <select id="cboPantallas" multiple class="form-select" style="display: none;"></select>
+    </div>
+    <div class="col-md-4">
+        <label for="cboSucursales">Sucursales</label>
+        <select id="cboSucursales" multiple class="form-select" style="display: none;"></select>
+    </div>    
+    
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <button id="btnSaveUsr" type="button" class="justify-content-center w-100 btn mb-1 btn-success d-flex align-items-center">
+            <i class="ti ti-device-floppy fs-4 me-2"></i>
+            Guardar
+        </button>
+    </div>
+    <div class="col-md-2">
+        <button type="button" class="justify-content-center w-100 btn mb-1 btn-danger d-flex align-items-center">
+            <i class="ti ti-reload fs-4 me-2"></i>
+            Limpiar
+        </button>
+    </div>
+    <div class="col-md-12">
+        <select id="cboGeneric"></select>
+    </div>
+</div>

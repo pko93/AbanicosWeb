@@ -1,0 +1,11 @@
+.multi-select-container {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.multi-select-container .badge {
+  font-size: 0.85em;
+  padding: 0.35em 0.65em;
+}

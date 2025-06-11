@@ -19,13 +19,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // localStorage.setItem('authToken', 'tu-token-jwt-aqui');
     // localStorage.removeItem('authToken');
 
-
+    console.log("refresca pantalla");
 
     const token = localStorage.getItem('authToken');
-    updateMenu();
+    // updateMenu();
     
     if(hasInfo(token)){
-        document.getElementById('main-wrapper').style.display = 'flex'; // Si usabas flexbox
+        updateSucursalesDropdown(); // Nuevo
+        updateMenu();
+        document.getElementById('main-wrapper').style.display = 'block'; // Si usabas flexbox
         loadView('home');
     }else{
         // $("#main-wrapper").css("visibility","hidden");
@@ -44,15 +46,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // });
 });
 
-async function loadView(viewName) {
+export async function loadView(viewName) {
     try {
         // 1. Cargar HTML
+        
         const htmlResponse = await fetch(`./views/${viewName}/${viewName}.html`);
         const html = await htmlResponse.text();
 
         if(viewName === "login"){
             document.getElementById('authentication-login-page').innerHTML = html;
+            document.getElementById('authentication-login-page').style.display = 'block';
+            document.getElementById('main-wrapper').style.display = 'none';
         }else{
+            document.getElementById('authentication-login-page').style.display = 'none';
+            document.getElementById('main-wrapper').style.display = 'block';
             document.getElementById('dynamicContent').innerHTML = html;
         }
 
@@ -105,25 +112,95 @@ function RedirecHome(){
     loadView('home');
 }
 
-function updateMenu() {
-    const menuItems = {
-        "01": document.querySelector('[data-view="venta"]'),
-        "02": document.querySelector('[data-view="producto"]'),
-        "03": document.querySelector('[data-view="sucursal"]'),
-        "04": document.querySelector('[data-view="reporte"]'),
-        "05": document.querySelector('[data-view="usuario"]'),
-        "06": document.querySelector('[data-view="dinero"]'),
-        "07": document.querySelector('[data-view="ajustes"]'),
-    };
+export function updateMenu() {
+    const menuItems = document.querySelectorAll('[data-view]');
 
-    Object.entries(menuItems).forEach(([screen, element]) => {
-        if (element) {
-            element.style.display = AuthService.hasPermission(screen) ? 'block' : 'none';
-        }
+    menuItems.forEach(item => {
+        const viewKey = item.getAttribute('data-view');
+        item.style.display = AuthService.hasPermission(viewKey) ? 'block' : 'none';
     });
+
+}
+export function updateSucursalesDropdown() {
+    const sucursales = JSON.parse(localStorage.getItem('userSucursales') || '[]');
+    const dropdownMenu = document.querySelector('.dropdown-menu[aria-labelledby="drop1"] .message-body');
+    
+    // Limpiar items existentes
+    dropdownMenu.innerHTML = '';
+
+    // Agregar nuevas sucursales
+    sucursales.forEach(sucursal => {
+        const item = document.createElement('a');
+        item.className = 'dropdown-item';
+        item.href = 'javascript:void(0)';
+        item.textContent = sucursal.nombre;
+        item.addEventListener('click', () => {
+            localStorage.setItem('currentSucursal', JSON.stringify(sucursal));
+            console.log('Sucursal seleccionada:', sucursal);
+            document.getElementById('drop1').textContent = `${sucursal.nombre}`;
+        });
+        dropdownMenu.appendChild(item);
+    });
+
+    // Actualizar texto principal
+    if (sucursales.length > 0) {
+        document.getElementById('drop1').textContent = `${sucursales[0].nombre}`;
+    }
 }
 
-document.getElementById('btnLogo1').addEventListener('click', RedirecHome);
 
+///botones de menu
+document.querySelectorAll('[data-view]').forEach(menuItem => {
+    menuItem.addEventListener('click', (e) => {
+        e.preventDefault();
+        const viewName = e.currentTarget.getAttribute('data-view');
+        if (AuthService.hasPermission(viewName)) {
+            var screen ="";
+            switch(viewName){
+                case "01":
+                    screen ="venta"
+                    break;
+                case "02":
+                    screen ="producto"
+                    break;
+                case "03":
+                    screen ="sucursal"
+                    break;
+                case "04":
+                    screen ="reportes"
+                    break;
+                case "05":
+                    screen ="usuario"
+                    break;
+                case "06":
+                    screen ="dinero"
+                    break;
+                case "06":
+                    screen ="correo"
+                    break;
+                case "08":
+                    screen ="ajustes"
+                    break;
+            }
+            loadView(screen); // Tu función existente para cargar vistas
+            // history.pushState(null, '', `/${viewName}`); // Opcional: actualiza URL
+        } else {
+            alert('No tienes permisos para acceder a esta pantalla');
+            // O muestra un mensaje en la interfaz:
+            // document.getElementById('error-message').textContent = 'Acceso denegado';
+        }
+    });
+});
+
+
+
+
+document.getElementById('btnLogo1').addEventListener('click', RedirecHome);
+document.getElementById("btnLogaut").addEventListener("click",function(){
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userPermissions')
+    localStorage.removeItem('ClaveTipo');
+    loadView('login');
+});
 
 
