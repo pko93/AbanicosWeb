@@ -84,3 +84,25 @@ body {
 .multi-select-container .text-muted {
   margin-right: auto;
 }
+
+.mi-tabla tr.hover {
+  background-color: RED;
+  transition: background-color 0.2s;
+}
+
+.mi-tabla tr.seleccionada {
+  background-color: yellow;
+  font-weight: bold;
+}
+
+.seleccion{
+    background-color: #f9b3eb;
+}
+
+.hover-activo:hover {
+  background-color: #fddef7;
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+

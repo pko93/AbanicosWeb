@@ -10,9 +10,9 @@ $(function (){
     ];
 
     const tipo = [
-        {idTipo: 1, Tipo: 'Sucursal Norte'},
-        {idTipo: 2, Tipo: 'Sucursal Sur'},
-        {idTipo: 3, Tipo: 'Sucursal Este'}
+        {idTipo: 1, Tipo: 'Sucursal Norte',prueba:1},
+        {idTipo: 2, Tipo: 'Sucursal Sur',prueba:2},
+        {idTipo: 3, Tipo: 'Sucursal Este',prueba:3}
     ];
 
     cboPantallas = new MultiSelectImproved('cboPantallas', sucursales, {
@@ -35,7 +35,45 @@ $(function (){
     cboPantallas.getSelectedItems();
     cboSucursales.getSelectedValues();
 
-    $("#cboGeneric").cboFeg({
+
+
+    $("#btnSaveUs").btnFeg({
+        text:"Guardar",
+        type:"success",
+        icon:"save",
+        onClick: function(){
+            // console.log("aqui")
+            var selection =  $("#grdUsuario").gridFeg("inst").getSeleccion();
+
+            console.log(selection);
+        }
+    })
+
+    $("#btnCleanUs").btnFeg({
+        text:"Limpiar",
+        type:"danger",
+        icon:"reload",
+        onClick: function(){
+            // $("#grdUsuario").gridFeg("inst").cleanSelection();
+
+
+            const tipo = [
+                {idTipo: 1, Tipo: 'Sucursal Norte',prueba:1},
+                {idTipo: 2, Tipo: 'Sucursal Sur',prueba:2},
+                {idTipo: 3, Tipo: 'Sucursal Este',prueba:3}
+            ];
+
+            $("#grdUsuario").gridFeg("inst").option("source",tipo);
+
+
+        }
+    })
+
+
+    
+    
+
+    $("#cboTipoUsuario").cboFeg({
         // source:tipo,
         valueProp:"idTipo",
         textProp:"Tipo",
@@ -44,10 +82,31 @@ $(function (){
             // console.log("aqui");
         }
     });
+
+    $("#grdUsuario").gridFeg({
+        // source: tipo,
+        index: "idTipo",
+        rowSelection:function(data){
+            // console.log("data del click",data)
+            // console.log("aqui seleccion grd")
+        },
+        columns:[
+            {
+                colName: "Tipo",
+                sField: "Tipo",
+                visible:true
+            },
+            {
+                colName: "Prueba",
+                sField: "prueba",
+                visible:true
+            }
+        ]
+    })
 })
 
 
-document.getElementById("btnSaveUsr").addEventListener("click",function(data){    
+function fn(data){    
     
 
 
@@ -57,13 +116,16 @@ document.getElementById("btnSaveUsr").addEventListener("click",function(data){
         {idTipo: 3, Tipo: 'Sucursal Este'}
     ];
 
-    $("#cboGeneric").cboFeg('inst').option("source",tipo);
+    $("#cboTipoUsuario").cboFeg('inst').option("source",tipo);
 
 
 
-    console.log($("#cboGeneric").cboFeg('inst'));
-    console.log($("#cboGeneric").cboFeg('inst').option("value"));
-});
+    console.log($("#cboTipoUsuario").cboFeg('inst'));
+    console.log($("#cboTipoUsuario").cboFeg('inst').option("value"));
+
+
+    $("#grdUsuario").gridFeg("inst").GetSeleccion();
+}
 
 // document.addEventListener('DOMContentLoaded', function() {
 //     // 1. Datos de ejemplo (reemplaza con tu data real)
