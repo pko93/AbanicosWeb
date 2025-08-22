@@ -1,3 +1,5 @@
+import { mostrarMensaje } from '../../assets/js/main.js';
+
 var cboPantallas;
 
 $(function (){
@@ -57,6 +59,10 @@ $(function (){
             // $("#grdUsuario").gridFeg("inst").cleanSelection();
 
 
+            mostrarMensaje(
+            'Mensaje Importante', 
+            'Esta es una notificación importante para el usuario.'
+            );
             const tipo = [
                 {idTipo: 1, Tipo: 'Sucursal Norte',prueba:1},
                 {idTipo: 2, Tipo: 'Sucursal Sur',prueba:2},

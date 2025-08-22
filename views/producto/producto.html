@@ -1,1 +1,155 @@
-<h1>Productos</h1>
+<div class="row">
+    <div class="col-md-2" style="padding-top: 7px; padding-bottom: 7px;">
+        <div id="btnLimpiarProductoPantalla"></div>
+    </div>
+    <div class="col-md-2" style="padding-top: 7px; padding-bottom: 7px;">
+        <div id="btnNuevoProductos"></div>
+    </div>
+    <div class="col-md-2" style="padding-top: 7px; padding-bottom: 7px;">
+        <div id="btnBuscarProductos"></div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="grdProductos"></div>
+    </div>
+</div>
+
+<div class="card" id="crdProductoDetalle" style="display: none;">
+    <div class="card-header headerCardRose">
+        <h4 class="mb-0 text-white">Detalle de producto</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <img id="imgProduct" src="../../assets/images/logos/abanicosLogo.ico">
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="txtProducto">Nombre producto</label>
+                        <input type="text" class="form-control " id="txtProducto" placeholder="Nombre del producto">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="cboTipoProducto">Tipo producto</label>
+                        <select id="cboTipoProducto"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9">
+                        <label for="txtDescripcion">Descripcion del producto</label>
+                        <input type="text" class="form-control " id="txtDescripcion" placeholder="Descripcion del producto">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="txtCodigoProducto">Codigo</label>
+                        <input type="text" class="form-control " id="txtCodigoProducto" placeholder="codigo del producto">
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <label for="cboSucursalesProducto">Sucursales</label>
+                        <select id="cboSucursalesProducto" class="form-control"></select>
+                    </div>
+                    <div class="col-md-2" style="padding-top: 25px;">
+                        <label for="chkProductoActivo">Activo</label>
+                        <input type="checkbox" class="form-check-input" id="chkProductoActivo">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="productoFile"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="card" id="crdProductoPrecios" style="display: none;">
+    <div class="card-header headerCardRose">
+        <h4 class="mb-0 text-white">Precio por tamaño</h4>        
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="cboTamanioProducto">Sucursal</label>
+                        <select id="cboSucursalTamanio"></select>
+                    </div>
+                </div>    
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="cboTamanioProducto">Tamaños</label>
+                        <select id="cboTamanioProducto"></select>
+                    </div>
+                </div>        
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="txtImporteTamanio">Precio Tamaño</label>
+                        <input type="text" class="form-control " id="txtImporteTamanio" placeholder="Precio">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="btnAgregarTamanio"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div id="grdProdTamanios"></div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div class="card" id="crdProductoIngredientesExtra" style="display: none;">
+    <div class="card-header headerCardRose" >
+        <h4 class="mb-0 text-white">Ingredientes extra</h4>        
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="col-md-12">
+                        <label for="cboTamanioProducto">Sucursal</label>
+                        <select id="cboSucursalIngrediente"></select>
+                    </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="cboIngredienteProducto">Ingrediente extra</label>
+                        <select id="cboIngredienteProducto"></select>
+                    </div>
+                </div>        
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="txtImporteIngrediente">Precio Tamaño</label>
+                        <input type="text" class="form-control " id="txtImporteIngrediente" placeholder="Precio">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="btnAgregarIngrediente"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div id="grdProdIngredienteExtra"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="row" id="BotonesProducto" style="display: none;">
+    <div class="col-md-2" style="padding-top: 7px; padding-bottom: 7px;">
+        <div id="btnLimpiarProducto"></div>
+    </div>
+    <div class="col-md-2" style="padding-top: 7px; padding-bottom: 7px;">
+        <div id="btnGuardarProducto"></div>
+    </div>
+</div>

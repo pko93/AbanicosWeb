@@ -22,9 +22,14 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("refresca pantalla");
 
     const token = localStorage.getItem('authToken');
+    const fecTkn = new Date(localStorage.getItem('Expiracion'));
+    const now = new Date();
+
+    console.log(fecTkn);
+    console.log(now);
     // updateMenu();
     
-    if(hasInfo(token)){
+    if(hasInfo(token) && fecTkn > new Date()){
         updateSucursalesDropdown(); // Nuevo
         updateMenu();
         document.getElementById('main-wrapper').style.display = 'block'; // Si usabas flexbox
@@ -48,8 +53,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 export async function loadView(viewName) {
     try {
-        // 1. Cargar HTML
-        
+        //limpia las pantallas anteriores
+        cleanupPreviousView()
+
+        // 1. Cargar HTML        
         const htmlResponse = await fetch(`./views/${viewName}/${viewName}.html`);
         const html = await htmlResponse.text();
 
@@ -82,30 +89,58 @@ export async function loadView(viewName) {
 
 // Función para cargar CSS
 function loadCSS(viewName) {
-    const linkId = `${viewName}-css`;
-    const oldLink = document.getElementById(linkId);
-    
-    if (oldLink) oldLink.remove();
+    return new Promise((resolve) => {
+        const linkId = `${viewName}-css`;
+        const oldLink = document.getElementById(linkId);
+        
+        if (oldLink) oldLink.remove();
 
-    const link = document.createElement('link');
-    link.id = linkId;
-    link.rel = 'stylesheet';
-    link.href = `./views/${viewName}/${viewName}.css`;
-    document.head.appendChild(link);
+        const link = document.createElement('link');
+        link.id = linkId;
+        link.rel = 'stylesheet';
+        link.href = `./views/${viewName}/${viewName}.css?t=${Date.now()}`;
+        
+        link.onload = resolve;
+        link.onerror = resolve; // Continuar incluso si hay error en CSS
+        
+        document.head.appendChild(link);
+    });
 }
 
 // Función para cargar JS
 function loadJS(viewName) {
-    const scriptId = `${viewName}-js`;
-    const oldScript = document.getElementById(scriptId);
-    
-    if (oldScript) oldScript.remove();
+    return new Promise((resolve) => {
+        const scriptId = `${viewName}-js`;
+        const oldScript = document.getElementById(scriptId);
+        
+        if (oldScript) oldScript.remove();
 
-    const script = document.createElement('script');
-    script.id = scriptId;
-    script.src = `./views/${viewName}/${viewName}.js`;
-    script.type = 'module'; // Opcional: si usas ES modules
-    document.body.appendChild(script);
+        const script = document.createElement('script');
+        script.id = scriptId;
+        script.src = `./views/${viewName}/${viewName}.js?t=${Date.now()}`;
+        script.type = 'module'; // Opcional: si usas ES modules
+        
+        // Manejar tanto éxito como error para que la promesa siempre se resuelva
+        script.onload = resolve;
+        script.onerror = resolve;
+        
+        document.body.appendChild(script);
+    });
+}
+
+// Función de limpieza
+function cleanupPreviousView() {
+    // Eliminar todos los CSS dinámicos
+    document.querySelectorAll('link[rel="stylesheet"][id$="-css"]').forEach(el => el.remove());
+    
+    // Eliminar todos los JS dinámicos
+    document.querySelectorAll('script[id$="-js"]').forEach(el => el.remove());
+    
+    // Limpiar event listeners y otros recursos (opcional)
+    if (window.currentViewCleanup) {
+        window.currentViewCleanup();
+        delete window.currentViewCleanup;
+    }
 }
 
 function RedirecHome(){
@@ -204,3 +239,44 @@ document.getElementById("btnLogaut").addEventListener("click",function(){
 });
 
 
+// Función para mostrar mensaje genérico
+    export function mostrarMensaje(titulo, mensaje) {
+        document.getElementById('popupMensajeTitulo').textContent = titulo;
+        document.getElementById('popupMensajeTexto').textContent = mensaje;
+        popupMensaje.style.display = 'flex';
+
+        const btnAceptar = document.getElementById('btnAceptar');
+
+        btnAceptar.addEventListener('click', function() {
+            popupMensaje.style.display = 'none';
+        });
+    }
+    
+    // Función para mostrar confirmación
+    export function mostrarConfirmacion(titulo, mensaje, onConfirm, onCancel) {
+        document.getElementById('popupConfirmacionTitulo').textContent = titulo;
+        document.getElementById('popupConfirmacionTexto').textContent = mensaje;
+        popupConfirmacion.style.display = 'flex';
+        
+        // Limpiar eventos anteriores para evitar múltiples llamadas
+        btnConfirmarSi.replaceWith(btnConfirmarSi.cloneNode(true));
+        btnConfirmarNo.replaceWith(btnConfirmarNo.cloneNode(true));
+        
+        // Obtener los nuevos elementos clonados
+        const newBtnSi = document.getElementById('btnConfirmarSi');
+        const newBtnNo = document.getElementById('btnConfirmarNo');
+        
+        newBtnSi.addEventListener('click', function() {
+            popupConfirmacion.style.display = 'none';
+            if (typeof onConfirm === 'function') {
+                onConfirm();
+            }
+        });
+        
+        newBtnNo.addEventListener('click', function() {
+            popupConfirmacion.style.display = 'none';
+            if (typeof onCancel === 'function') {
+                onCancel();
+            }
+        });
+    }
