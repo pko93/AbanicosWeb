@@ -116,7 +116,22 @@ export const apiProductos = {
       IdTipoProducto
     });
     return result;
-  }
+  },
+
+  getIngredienteExtra: async(IdIngredienteExtra,IdTipoIngredienteExtra) =>{
+    const result = await makeGenericRequest('/Productos/GetIngredienteExtra', 'POST', {
+      IdIngredienteExtra,
+      IdTipoIngredienteExtra
+    });
+    return result;
+  },
+  getProductoTamanioSuc: async(IdProducto,IdSucursal) =>{
+    const result = await makeGenericRequest('/Productos/GetProductoTamanioSuc', 'POST', {
+      IdProducto,
+      IdSucursal
+    });
+    return result;
+  },
 }
 
 export const apiCat = {

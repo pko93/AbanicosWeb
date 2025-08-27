@@ -201,16 +201,29 @@ $(function(){
         onValueChanged(e){
             // console.log(e);
             // console.log("aqui");
+            ConsultaTamaniosProducto();
         }
     });
 
     $("#cboTamanioProducto").cboFeg({
         // source:tipo,
-        valueProp:"idTipo",
-        textProp:"Tipo",
+        valueProp:"idElemento",
+        textProp:"nombreElemento",
         onValueChanged(e){
             // console.log(e);
             // console.log("aqui");
+        }
+    });
+
+    
+    $('#txtImporteTamanio').numFeg({
+        format: "currency",
+        currencySymbol: "$",
+        decimalPlaces: 2,
+        thousandsSeparator: true,
+        placeholder: "0.00",
+        onValueChanged: function(data) {
+            console.log("Valor cambiado:", data.value, "Formateado:", data.formattedValue);
         }
     });
     
@@ -258,8 +271,8 @@ $(function(){
 
     $("#cboIngredienteProducto").cboFeg({
         // source:tipo,
-        valueProp:"idTipo",
-        textProp:"Tipo",
+        valueProp:"idIngredienteExtra",
+        textProp:"ingredienteExtra",
         onValueChanged(e){
             // console.log(e);
             // console.log("aqui");
@@ -316,27 +329,61 @@ $(function(){
 
    ConsultaTipoProducto(); 
    ConsultaSucursales();
+   Tamanios();
+   IngredienteExtra();
 });
 
 async function ConsultaTipoProducto(){
+    $('#genLoading').loadingPanelFeg("inst").show();
     const catTipos = await apiCat.getCatalog("CatTipoProducto",true);
     // console.log(catTipos);
     $("#cboTipoProducto").cboFeg("inst").option("source",catTipos);
+
+    $('#genLoading').loadingPanelFeg("inst").hide();
 }
 
 async function ConsultaSucursales(){
+    $('#genLoading').loadingPanelFeg("inst").show();
     const catSuc = await apiSucursales.getSucursalAsync(true);
     // console.log(catSuc);
     $("#cboSucursalesProducto").multiCheckComboFeg("inst").option("source",catSuc);    
 
     $("#cboSucursalIngrediente").cboFeg("inst").option("source",catSuc);
     $("#cboSucursalTamanio").cboFeg("inst").option("source",catSuc);
+    $('#genLoading').loadingPanelFeg("inst").hide();
 }
 
 async function ConsltaProductos(IdProducto){
+    $('#genLoading').loadingPanelFeg("inst").show();
     const productos = await apiProductos.getProductos(IdProducto);
     // console.log(productos);
     $("#grdProductos").gridFeg("inst").option("source",productos);
+    $('#genLoading').loadingPanelFeg("inst").hide();
+}
+
+async function Tamanios(){
+    $('#genLoading').loadingPanelFeg("inst").show();
+    const catTipos = await apiCat.getCatalog("CatTamaniosProducto",true);
+
+    $("#cboTamanioProducto").cboFeg("inst").option("source",catTipos);
+    $('#genLoading').loadingPanelFeg("inst").hide();
+}
+
+async function IngredienteExtra(){
+    $('#genLoading').loadingPanelFeg("inst").show();
+    const productos = await apiProductos.getIngredienteExtra(null,null);
+    // console.log(productos);
+    $("#cboIngredienteProducto").cboFeg("inst").option("source",productos);
+    $('#genLoading').loadingPanelFeg("inst").hide();
+    
+}
+
+async function ConsultaTamaniosProducto(){
+    $('#genLoading').loadingPanelFeg("inst").show();
+    const productos = await apiProductos.getProductoTamanioSuc($("#grdProductos").gridFeg("inst").getSeleccion()[0].idProducto,$("#cboSucursalTamanio").cboFeg("inst").option("value"));
+    // console.log(productos);
+    $("#grdProdTamanios").gridFeg("inst").option("source",productos);
+    $('#genLoading').loadingPanelFeg("inst").hide();
 }
 
 function getSelectedProductId() {

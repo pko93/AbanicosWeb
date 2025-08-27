@@ -1043,7 +1043,424 @@ jQuery.fn.extend({
         controls[idGeneral] = prop;
         return this;
     }
-}
+    },
+    loadingPanelFeg: function(prop) {
+        if (prop === "inst") {
+            var idGeneral = $(this).attr("id");
+            return controls[idGeneral];
+        } else {
+            var idGeneral = $(this).attr("id");
+            if (controls[idGeneral] != null && controls[idGeneral] != undefined) {
+                delete controls[idGeneral];
+            }
+
+            // Propiedades por defecto
+            prop.widget = "loadingPanelFeg";
+            prop.name = $(this).attr("id");
+            if (!prop.hasOwnProperty("message")) { prop.message = "Cargando..."; }
+            if (!prop.hasOwnProperty("showSpinner")) { prop.showSpinner = true; }
+            if (!prop.hasOwnProperty("spinnerType")) { prop.spinnerType = "image"; } // image, dots, circles, bars
+            if (!prop.hasOwnProperty("customImage")) { prop.customImage = "/assets/images/logos/loading.gif"; }
+            if (!prop.hasOwnProperty("imageWidth")) { prop.imageWidth = "80px"; }
+            if (!prop.hasOwnProperty("imageHeight")) { prop.imageHeight = "80px"; }
+            if (!prop.hasOwnProperty("overlay")) { prop.overlay = true; }
+            if (!prop.hasOwnProperty("overlayColor")) { prop.overlayColor = "rgba(255, 255, 255, 0.8)"; }
+            if (!prop.hasOwnProperty("zIndex")) { prop.zIndex = 9999; }
+            if (!prop.hasOwnProperty("autoShow")) { prop.autoShow = false; }
+
+            // Crear elementos del control
+            const loadingHTML = `
+                <div class="loading-panel-container" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: ${prop.zIndex};
+                    display: none;
+                    ${prop.overlay ? `background-color: ${prop.overlayColor};` : ''}
+                ">
+                    <div class="loading-content" style="
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        text-align: center;
+                        background: white;
+                        padding: 30px;
+                        border-radius: 15px;
+                        box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+                        min-width: 200px;
+                    ">
+                        ${prop.showSpinner ? `
+                        <div class="loading-spinner ${prop.spinnerType}" style="
+                            margin-bottom: 20px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        ">
+                            ${getSpinnerHtml(prop.spinnerType, prop.customImage, prop.imageWidth, prop.imageHeight)}
+                        </div>
+                        ` : ''}
+                        <div class="loading-message" style="
+                            color: #333;
+                            font-family: Arial, sans-serif;
+                            font-size: 16px;
+                            font-weight: bold;
+                        ">${prop.message}</div>
+                    </div>
+                </div>
+            `;
+
+            // Inicializar control
+            $(this).html(loadingHTML);
+            const $container = $(this).find('.loading-panel-container');
+
+            // Función para generar el spinner HTML según el tipo
+            function getSpinnerHtml(type, imageUrl, width, height) {
+                switch(type) {
+                    case 'image':
+                        return `
+                            <img src="${imageUrl}" 
+                                alt="Cargando..." 
+                                style="
+                                    width: ${width};
+                                    height: ${height};
+                                    object-fit: contain;
+                                "
+                                onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzUiIHN0cm9rZT0iI0ZGNkI2QiIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNDAiIHI9IjM1IiBzdHJva2U9IiM0NUJDN0QiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWRhc2hhcnJheT0iMTAgMTAiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIi8+Cjwvc3ZnPg=='">
+                        `;
+                    
+                    case 'dots':
+                        return `
+                            <div class="dots-spinner" style="display: inline-block; position: relative; width: 80px; height: 80px;">
+                                <div style="position: absolute; top: 33px; width: 13px; height: 13px; border-radius: 50%; background: #ff6b6b; animation: dots1 0.6s infinite;"></div>
+                                <div style="position: absolute; top: 33px; width: 13px; height: 13px; border-radius: 50%; background: #4ecdc4; animation: dots2 0.6s infinite;"></div>
+                                <div style="position: absolute; top: 33px; width: 13px; height: 13px; border-radius: 50%; background: #45b7d1; animation: dots3 0.6s infinite;"></div>
+                            </div>
+                        `;
+                    
+                    default:
+                        return getSpinnerHtml('image', imageUrl, width, height);
+                }
+            }
+
+            // CSS para las animaciones (inyectarlo una sola vez)
+            if (!$('#loading-panel-styles').length) {
+                $('head').append(`
+                    <style id="loading-panel-styles">
+                        @keyframes dots1 {
+                            0% { transform: scale(0); left: 0px; }
+                            100% { transform: scale(1); left: 40px; }
+                        }
+                        @keyframes dots2 {
+                            0% { transform: scale(1); left: 40px; }
+                            100% { transform: scale(0); left: 80px; }
+                        }
+                        @keyframes dots3 {
+                            0% { transform: scale(0); left: 80px; }
+                            100% { transform: scale(1); left: 120px; }
+                        }
+                        
+                        /* Animación para imagen personalizada */
+                        .loading-spinner.image img {
+                            animation: pulse 1.5s ease-in-out infinite both;
+                        }
+                        
+                        @keyframes pulse {
+                            0% { transform: scale(0.9); opacity: 0.8; }
+                            50% { transform: scale(1.1); opacity: 1; }
+                            100% { transform: scale(0.9); opacity: 0.8; }
+                        }
+                        
+                        /* Rotación para imágenes tipo spinner */
+                        .loading-spinner.image.rotate img {
+                            animation: rotate 2s linear infinite;
+                        }
+                        
+                        @keyframes rotate {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                    </style>
+                `);
+            }
+
+            // Métodos públicos
+            prop.show = function(message = null) {
+                if (message) {
+                    $(this).find('.loading-message').text(message);
+                }
+                $container.fadeIn(300);
+                return this;
+            };
+
+            prop.hide = function() {
+                $container.fadeOut(300);
+                return this;
+            };
+
+            prop.setMessage = function(message) {
+                $(this).find('.loading-message').text(message);
+                return this;
+            };
+
+            prop.setImage = function(imageUrl, width = "80px", height = "80px") {
+                const $spinner = $(this).find('.loading-spinner.image');
+                if ($spinner.length) {
+                    $spinner.html(`
+                        <img src="${imageUrl}" 
+                            alt="Cargando..." 
+                            style="width: ${width}; height: ${height}; object-fit: contain;"
+                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0MCIgcj0iMzUiIHN0cm9rZT0iI0ZGNkI2QiIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxjaXJjbGUgY3g9IjQwIiBjeT0iNDAiIHI9IjM1IiBzdHJva2U9IiM0NUJDN0QiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWRhc2hhcnJheT0iMTAgMTAiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIi8+Cjwvc3ZnPg=='">
+                    `);
+                }
+                return this;
+            };
+
+            prop.isVisible = function() {
+                return $container.is(':visible');
+            };
+
+            // Mostrar automáticamente si está configurado
+            if (prop.autoShow) {
+                prop.show();
+            }
+
+            // Guardar en controles globales
+            controls[idGeneral] = prop;
+            return this;
+        }
+    },
+    numFeg: function(prop) {
+        if (prop === "inst") {
+            var idGeneral = $(this).attr("id");
+            return controls[idGeneral];
+        } else {
+            var idGeneral = $(this).attr("id");
+            if (controls[idGeneral] != null && controls[idGeneral] != undefined) {
+                delete controls[idGeneral];
+            }
+
+            // Propiedades por defecto
+            prop.widget = "numericInputFeg";
+            prop.name = $(this).attr("id");
+            if (!prop.hasOwnProperty("format")) { prop.format = "number"; } // number, currency, percent
+            if (!prop.hasOwnProperty("currencySymbol")) { prop.currencySymbol = "$"; } // $, €, £, etc.
+            if (!prop.hasOwnProperty("decimalPlaces")) { prop.decimalPlaces = 2; }
+            if (!prop.hasOwnProperty("thousandsSeparator")) { prop.thousandsSeparator = true; }
+            if (!prop.hasOwnProperty("allowNegative")) { prop.allowNegative = false; }
+            if (!prop.hasOwnProperty("minValue")) { prop.minValue = null; }
+            if (!prop.hasOwnProperty("maxValue")) { prop.maxValue = null; }
+            if (!prop.hasOwnProperty("placeholder")) { prop.placeholder = "0.00"; }
+            if (!prop.hasOwnProperty("value")) { prop.value = null; }
+            if (!prop.hasOwnProperty("onValueChanged")) { prop.onValueChanged = null; }
+            if (!prop.hasOwnProperty("cssClass")) { prop.cssClass = "form-control"; }
+
+            // Crear el input
+            const inputHTML = `
+                <input type="text" 
+                    id="${prop.name}_input" 
+                    class="${prop.cssClass}" 
+                    placeholder="${prop.placeholder}"
+                    style="text-align: right;">
+            `;
+
+            // Inicializar control
+            $(this).html(inputHTML);
+            const $input = $(`#${prop.name}_input`);
+
+            // Función para formatear el valor
+            const formatValue = (value, formatType) => {
+                if (value === null || value === undefined || value === "") return "";
+
+                let numValue = parseFloat(value);
+                if (isNaN(numValue)) return value;
+
+                // Aplicar límites
+                if (prop.minValue !== null && numValue < prop.minValue) {
+                    numValue = prop.minValue;
+                }
+                if (prop.maxValue !== null && numValue > prop.maxValue) {
+                    numValue = prop.maxValue;
+                }
+
+                // Formatear según el tipo
+                switch (formatType) {
+                    case "currency":
+                        return formatCurrency(numValue, prop.currencySymbol, prop.decimalPlaces, prop.thousandsSeparator);
+                    case "percent":
+                        return formatPercent(numValue, prop.decimalPlaces, prop.thousandsSeparator);
+                    case "number":
+                    default:
+                        return formatNumber(numValue, prop.decimalPlaces, prop.thousandsSeparator);
+                }
+            };
+
+            // Función para formatear moneda
+            const formatCurrency = (value, symbol, decimals, useSeparator) => {
+                return symbol + formatNumber(value, decimals, useSeparator);
+            };
+
+            // Función para formatear porcentaje
+            const formatPercent = (value, decimals, useSeparator) => {
+                return formatNumber(value, decimals, useSeparator) + "%";
+            };
+
+            // Función para formatear número
+            const formatNumber = (value, decimals, useSeparator) => {
+                const fixedValue = value.toFixed(decimals);
+                
+                if (!useSeparator) {
+                    return fixedValue;
+                }
+
+                // Separador de miles
+                const parts = fixedValue.split(".");
+                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                
+                return parts.join(".");
+            };
+
+            // Función para parsear el valor (quitar formato)
+            const parseValue = (formattedValue) => {
+                if (!formattedValue) return null;
+
+                // Remover símbolos y separadores
+                let cleanValue = formattedValue
+                    .replace(new RegExp("\\" + prop.currencySymbol, "g"), "")
+                    .replace(/%/g, "")
+                    .replace(/,/g, "")
+                    .trim();
+
+                // Convertir a número
+                const numValue = parseFloat(cleanValue);
+                return isNaN(numValue) ? null : numValue;
+            };
+
+            // Establecer valor inicial
+            if (prop.value !== null) {
+                $input.val(formatValue(prop.value, prop.format));
+            }
+
+            // Eventos para formateo automático
+            $input.on("blur", function() {
+                const rawValue = $(this).val();
+                const parsedValue = parseValue(rawValue);
+                
+                if (parsedValue !== null) {
+                    $(this).val(formatValue(parsedValue, prop.format));
+                    
+                    // Disparar evento de cambio
+                    if (prop.onValueChanged && prop.value !== parsedValue) {
+                        prop.value = parsedValue;
+                        prop.onValueChanged({
+                            value: parsedValue,
+                            formattedValue: $(this).val(),
+                            element: this
+                        });
+                    }
+                }
+            });
+
+            $input.on("focus", function() {
+                const formattedValue = $(this).val();
+                const parsedValue = parseValue(formattedValue);
+                
+                if (parsedValue !== null) {
+                    $(this).val(parsedValue.toString());
+                }
+            });
+
+            $input.on("input", function(e) {
+                // Validar entrada en tiempo real
+                const inputVal = $(this).val();
+                
+                // Permitir solo números, punto decimal, signo negativo y coma
+                const validChars = /[0-9.,\-]/;
+                if (inputVal && !validChars.test(inputVal.slice(-1))) {
+                    $(this).val(inputVal.slice(0, -1));
+                }
+            });
+
+            $input.on("keypress", function(e) {
+                // Prevenir caracteres no válidos
+                const char = String.fromCharCode(e.which);
+                const validChars = /[0-9.\-]/;
+                
+                if (!validChars.test(char)) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Validar único punto decimal
+                if (char === "." && $(this).val().includes(".")) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Validar único signo negativo
+                if (char === "-" && ($(this).val().includes("-") || $(this).val().length > 0)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Métodos públicos
+            prop.option = function(property, value) {
+                if (typeof property === 'string') {
+                    if (value === undefined) {
+                        return prop[property];
+                    } else {
+                        const oldValue = prop[property];
+                        prop[property] = value;
+
+                        // Actualizaciones específicas
+                        if (property === "value") {
+                            $input.val(formatValue(value, prop.format));
+                        }
+                        else if (property === "format" || property === "currencySymbol" || 
+                                property === "decimalPlaces" || property === "thousandsSeparator") {
+                            // Reformatear el valor actual con la nueva configuración
+                            const currentValue = parseValue($input.val());
+                            if (currentValue !== null) {
+                                $input.val(formatValue(currentValue, prop.format));
+                            }
+                        }
+                    }
+                }
+            };
+
+            prop.getValue = function() {
+                return parseValue($input.val());
+            };
+
+            prop.getFormattedValue = function() {
+                return $input.val();
+            };
+
+            prop.setValue = function(value) {
+                $input.val(formatValue(value, prop.format));
+                prop.value = parseValue($input.val());
+                return this;
+            };
+
+            prop.clear = function() {
+                $input.val("");
+                prop.value = null;
+                return this;
+            };
+
+            prop.focus = function() {
+                $input.focus();
+                return this;
+            };
+
+            // Guardar en controles globales
+            controls[idGeneral] = prop;
+            return this;
+        }
+    }
 });
 
 

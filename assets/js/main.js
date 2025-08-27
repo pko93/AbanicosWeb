@@ -14,7 +14,14 @@ import { AuthService } from './auth.js';
 // localStorage.removeItem('authToken');
 
 document.addEventListener('DOMContentLoaded', function() {
-
+    $('#genLoading').loadingPanelFeg({
+        message: "Cargando...",
+        spinnerType: "image",
+        customImage: "/assets/images/logos/logo.ico",
+        imageWidth: "100px",
+        imageHeight: "100px",
+        overlay: true
+    });
     ////linea de validacion de entrad al sistema
     // localStorage.setItem('authToken', 'tu-token-jwt-aqui');
     // localStorage.removeItem('authToken');
@@ -280,3 +287,11 @@ document.getElementById("btnLogaut").addEventListener("click",function(){
             }
         });
     }
+
+ export function  showLoadingPanel(){
+    $('#genLoading').loadingPanelFeg("inst").show();
+}
+
+export function hideLoadingPanel(){
+    $('#genLoading').loadingPanelFeg("inst").hide();
+}
